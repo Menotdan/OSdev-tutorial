@@ -17,4 +17,6 @@ This tutorial will not cover how to make your own bootloader, as there are alrea
 [Setting up your tools](tools/chapter.md)
 
 ### Kernel
-[Chapter 1: Loading the kernel and getting code execution.](1/chapter.md)
+[Chapter 1: Loading the kernel and getting code execution](1/chapter.md)
+
+[Chapter 2: Loading the GDT](2/chapter.md)

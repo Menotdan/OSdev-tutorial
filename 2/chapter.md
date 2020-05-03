@@ -35,7 +35,16 @@ GDT_END:
 ```
 The GDT starts with a null entry, because the offset 0 is used as an invalid descriptor. Each entry is 8 bytes long, and segment registers store offsets into the GDT.
 
-You can load descriptors into most segment registers by just storing the offset into them, but for the `cs` segment register, you need to do something like far jump or `iretq`. In long mode you cannot far jump, so we will `iretq` to reload `cs`, but first, we need to actually load the GDT.
+Each GDT descriptor looks like this:
+
+![A GDT entry](GDT_Entry.png)
+
+
+You can load descriptors into most segment registers by just storing the offset into them, but for the `cs` segment register, you need to do something like far jump or `iretq`. In long mode you cannot far jump, so we will `iretq` to reload `cs`
+
+When a segment register is reloaded with a new value, it reads from that GDT offset and puts the descriptor stored at the offset into a hidden part of the segment register.
+
+Now that we have the GDT structure, we need to actually load the GDT.
 
 To load the GDT, you use the `lgdt` instruction. The instruction takes a memory operand, which points to a structure describing the GDT.
 
