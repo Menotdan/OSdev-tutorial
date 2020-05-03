@@ -97,3 +97,5 @@ void kmain() {
 Now, if your build system works, and you did everything properly, you should be able to build this, add the kernel to your filesystem and add the config file (this is explained in the [tools setup](../tools/chapter.md)), and then run it with QEMU. 
 
 You should get a QEMU window  with qloader2 running in it, and if you boot your OS, it should hang, not very exciting, but it at least shows that your code did something. If you used `-no-shutdown` or `-no-reboot`, check if the window title says that QEMU was paused, if it was, something might have faulted and you should use `-d int` to figure out what happened, then you can ask in the [OSDev discord](https://discord.gg/RnCtsqD) for help.
+
+-[Back to the start](../README.md)-
