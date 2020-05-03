@@ -77,6 +77,10 @@ section .text
 extern kmain
 exec_start:
     call kmain
+
+    ; Halt if the kernel exits for some reason
+    cli
+    hlt
 ```
 This will just call the kmain function (not defined yet). Later we will want to load a GDT from here, but not yet. (The GDT in long mode is needed later for permissions, but you probably just want to see your kernel do something for now, right?)
 
