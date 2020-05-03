@@ -20,7 +20,6 @@ Next you should set up a Makefile to build all of the files in your OS using you
 You will want to use these CFLAGS:
 ```
 CFLAGS = -g -fno-pic               \
-    -z max-page-size=0x1000        \
     -mno-sse                       \
     -mno-sse2                      \
     -mno-mmx                       \
