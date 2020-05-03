@@ -20,7 +20,7 @@ stivale_header:
 ```
 All of these parameters are documented [here](https://github.com/qloader2/qloader2/blob/master/STIVALE.md).
 
-Your stack goes in `.bss`, which is where uninitialized data is put. (Data with undefined values at the start.)
+Your stack goes in `.bss`, which is where uninitialized data is put.
 ```x86asm
 section .bss
 

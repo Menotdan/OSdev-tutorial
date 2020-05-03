@@ -36,13 +36,13 @@ CFLAGS = -g -fno-pic               \
 And you can build each C file into an object file like this:
 ```makefile
 %.o: %.c
-	${CC} ${CFLAGS} -I src -c $< -o $@ -ffreestanding
+	${CC} ${CFLAGS} -I src -c $< -o $@
 ```
 
 And to make an assembly file into an object file you can use this rule:
 ```makefile
 %.o: %.asm
-	nasm -f elf64 -F dwarf -g -o $@ $<
+	nasm -f elf64 -o $@ $<
 ```
 
 Then you can make a list of object files like this
@@ -102,11 +102,11 @@ KERNEL_CMDLINE=
 
 `KERNEL_PROTO` Is the boot protocol to use, and the most supported one in qloader2 is stivale, and it happens to also be the easiest to use (In my opinion).
 
-`KERNEL_CMDLINE` are the options that get passed to the kernel.
+`KERNEL_CMDLINE` are the options that get passed to the kernel. (Note this can be omitted)
 
 You can learn more about these options [here](https://github.com/qloader2/qloader2/blob/master/CONFIG.md), and [here](https://github.com/qloader2/qloader2/blob/master/README.md).
 
-Then once you have the `qloader2.cfg` on the disk, you can simple run the `qloader2-install` script, which should be simple enough to use.
+Then once you have the `qloader2.cfg` on the disk, you can simply run the `qloader2-install` script, which should be simple enough to use.
 
 `./qloader2-install <qloader2 binary path> <device / image to install to>`
 
