@@ -39,7 +39,7 @@ Each GDT descriptor looks like this:
 
 ![A GDT entry](GDT_Entry.png)
 
-On x86_64, the base is usually 0 and the limit is usually `0xFFFFF`, and the flags tell the CPU more about the descriptor, like if it is a code descriptor or a data descriptor (only code descriptors can be loaded into `cs`). The access byte tells the CPU about permissions for that descriptor, and also controls user mode vs kernel mode, along with the other permission rings that exist on x86.
+On x86_64, the base is usually 0 and the limit is usually `0xFFFFF` plus the granularity in the flags, although `base` and `limit` are completely ignored in long mode, and the flags tell the CPU more about the descriptor, like if it is a code descriptor or a data descriptor (only code descriptors can be loaded into `cs`). The access byte tells the CPU about permissions for that descriptor, and also controls user mode vs kernel mode, along with the other permission rings that exist on x86.
 
 You can load descriptors into most segment registers by just storing the offset into them, but for the `cs` segment register, you need to do something like far jump or `iretq`. In long mode you cannot far jump, so we will `iretq` to reload `cs`.
 
