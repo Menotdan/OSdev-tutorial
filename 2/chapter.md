@@ -1,11 +1,9 @@
 # Chapter 2
 ## Loading the GDT
 
-The GDT is a table that holds a bunch of descriptors which describe the state of segments and the CPU when the offsets from the start of the GDT to the descriptors are loaded into segments.
+In long mode, the GDT is used by the kernel to tell the CPU about what protection rings to run in (user mode, kernel mode, etc) and also about what mode to run in (long mode or protected mode, etc), and even though qloader2 loads a GDT to get into long mode, we should still load our own so we have more control, plus the state of the GDT from qloader2 is undefined.
 
-It was used in 32 bit mode for segmentation before 64 bit mode came along and made segmentation obsolete, however now in 64 bit mode it is mostly used for controlling CPU permissions like user mode vs. kernel mode.
-
-The GDT should be loaded before you start running anything else, as it will be useful later for permissions and such, so we will load it in the assembly before the kernel is started, although if you wanted to try, you could load the GDT in C instead as part of your kernel's setup in `kmain`. This would also make controlling the parameters perhaps easier to understand, but you can also comment them in assembly.
+So lets load a GDT!
 
 A very simple example GDT that can be used in long mode looks like this:
 ```x86asm
@@ -33,13 +31,11 @@ GDT64:
     db 0
 GDT_END:
 ```
-The GDT starts with a null entry, because the offset 0 is used as an invalid descriptor. Each entry is 8 bytes long, and segment registers store offsets into the GDT.
-
 Each GDT descriptor looks like this:
 
 ![A GDT entry](GDT_Entry.png)
 
-On x86_64, the base is usually 0 and the limit is usually `0xFFFFF` plus the granularity in the flags, although `base` and `limit` are completely ignored in long mode, and the flags tell the CPU more about the descriptor, like if it is a code descriptor or a data descriptor (only code descriptors can be loaded into `cs`). The access byte tells the CPU about permissions for that descriptor, and also controls user mode vs kernel mode, along with the other permission rings that exist on x86.
+In long mode, the base and limit parts of each GDT descriptor are ignored, and the `flags` and access byte tell the CPU things about the descriptor and what to do when it is loaded into some segment register. In long mode, the only segment register that the CPU really cares about is the `cs` register.
 
 You can load descriptors into most segment registers by just storing the offset into them, but for the `cs` segment register, you need to do something like far jump or `iretq`. In long mode you cannot far jump, so we will `iretq` to reload `cs`.
 
@@ -47,7 +43,7 @@ When a segment register is reloaded with a new value, it reads from that GDT off
 
 Now that we have the GDT structure, we need to actually load the GDT.
 
-To load the GDT, you use the `lgdt` instruction. The instruction takes a memory operand, which points to a structure describing the GDT.
+To load the GDT, you use the `lgdt` instruction. The instruction takes a memory operand, which points to a structure describing the GDT. (How big it is and where it starts in memory)
 
 The structure looks like this:
 ```x86asm
@@ -61,9 +57,9 @@ Now, about using `iretq`, it is a variant of `ret`, in that it pops from the sta
 
 So we need to push the values we want those registers to be onto the stack.
 
-We can set `rip` to point to another label, we can set `cs` to be `0x8`, since that is the offset of the kernel's (we will add user descriptors later) code segment into the GDT, because of the null descriptor, for `rflags` we can use `pushf`, and for `rsp` we can just push it, and we can set `ss` to the offset of the data descriptor, or `0x10`.
+We can set `rip` to point to another label where we want to continue executing, we can set `cs` to be `0x8`, since that is the offset of the kernel's code segment (we will add user descriptors later) into the GDT, and not `0x0`, because of the null descriptor, for `rflags` we can use `pushf`, and for `rsp` we can just push rsp (but store it before pushing anything else), and we can set `ss` to the offset of the data descriptor, or `0x10` (`0x8` more than `0x8`).
 
-We finally need to set all the other segment registers to the data descriptor offset, even though the CPU won't use them.
+We should finally set all the other segment registers to the data descriptor offset, even though the CPU won't use them in long mode.
 
 So, with the knowledge above, you can change your `exec_start` to something like this (remember to keep the external reference to kmain):
 ```x86asm
@@ -71,11 +67,13 @@ exec_start:
     lgdt [GDT_PTR]
 
     ; Push the values for iretq
+    mov rax, rsp ; Save before we push
     push 0x10       ; ss
-    push rsp        ; rsp
+    push rax        ; rsp
     pushf           ; rflags
     push 0x8        ; cs
     push run_kernel ; rip
+    iretq ; "Return" to the run_kernel
     
 run_kernel:
     mov ax, 0x10 ; We can't write to the segment registers directly
