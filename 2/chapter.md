@@ -19,15 +19,15 @@ GDT64:
     dw 0
     dw 0
     db 0
-    db 10011011b
-    db 10100000b
+    db 10011010b
+    db 00100000b
     db 0
     .Data: equ $ - GDT64
     dw 0
     dw 0
     db 0
-    db 10010011b
-    db 11000000b
+    db 10010010b
+    db 00000000b
     db 0
 GDT_END:
 ```
