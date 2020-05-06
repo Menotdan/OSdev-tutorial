@@ -1,7 +1,7 @@
 # Chapter 2
 ## Loading the GDT
 
-In long mode, the GDT is used by the kernel to tell the CPU about what protection rings to run in (user mode, kernel mode, etc) and also about what mode to run in (long mode or protected mode, etc), and even though qloader2 loads a GDT to get into long mode, we should still load our own so we have more control, plus the state of the GDT from qloader2 is undefined.
+In long mode, the GDT is used by the kernel to tell the CPU about what protection rings to run in (user mode, kernel mode, etc) and also about what mode to run in (executing 32 bit code vs executing 64 bit code), and even though qloader2 loads a GDT to get into long mode, we should still load our own so we have more control, plus the state of the GDT from qloader2 is undefined.
 
 So lets load a GDT!
 
