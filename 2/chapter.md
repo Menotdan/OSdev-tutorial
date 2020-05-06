@@ -20,14 +20,14 @@ GDT64:
     dw 0
     db 0
     db 10011011b
-    db 10101111b
+    db 10100000b
     db 0
     .Data: equ $ - GDT64
-    dw 0xFFFF
+    dw 0
     dw 0
     db 0
     db 10010011b
-    db 11001111b
+    db 11000000b
     db 0
 GDT_END:
 ```
@@ -61,7 +61,7 @@ We can set `rip` to point to another label where we want to continue executing, 
 
 We should finally set all the other segment registers to the data descriptor offset, even though the CPU won't use them in long mode.
 
-So, with the knowledge above, you can change your `exec_start` to something like this (remember to keep the external reference to kmain):
+So, with the knowledge above, you can change your `exec_start` to something like this (remember to keep the external reference to kmain and the `global exec_start`):
 ```x86asm
 exec_start:
     lgdt [GDT_PTR]

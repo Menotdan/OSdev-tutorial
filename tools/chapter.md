@@ -17,8 +17,9 @@ Next you should install QEMU from your distro's package manager, so you can run 
 
 Next you should set up a Makefile to build all of the files in your OS using your newly acquired toolchain into one elf file, that can be loaded by the bootloader.
 
-You will want to use these CFLAGS:
+You will want to use these CFLAGS and your new cross compiler:
 ```
+CC = x86_64-elf-gcc
 CFLAGS = -g -fno-pic               \
     -mno-sse                       \
     -mno-sse2                      \

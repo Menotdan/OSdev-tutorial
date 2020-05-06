@@ -75,6 +75,7 @@ Then you can go ahead and start writing some code.
 section .text
 
 extern kmain
+global exec_start ; So qloader2 can find the entry point properly
 exec_start:
     call kmain
 
