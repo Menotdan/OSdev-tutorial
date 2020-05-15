@@ -92,7 +92,7 @@ sudo mount `cat loopback_dev`p1 mountpoint
 This just sets up a loopback device and stores its name in the `loopback_dev` file, then sets up an ext2 filesystem, then mounts partition 1 to the `mountpoint` folder.
 
 
-Then you just need to move the OS elf file to the filesystem. And create a `qloader2.cfg` which will tell qloader2 how to load your kernel.
+Then you just need to move the OS elf file to the filesystem (mounted at `mountpoint` so just copy the files in there) and create a `qloader2.cfg` which will tell qloader2 how to load your kernel.
 
 An example `qloader2.cfg` could look like this:
 ```
@@ -117,6 +117,17 @@ KERNEL_CMDLINE=
 `KERNEL_CMDLINE` are the options that get passed to the kernel. (Note this can be omitted)
 
 You can learn more about these options [here](https://github.com/qloader2/qloader2/blob/master/CONFIG.md), and [here](https://github.com/qloader2/qloader2/blob/master/README.md).
+
+Now for cleaning up the mountpoint and loopback device:
+```
+sync
+sudo umount mountpoint/
+sudo losetup -d `cat loopback_dev`
+rm -rf mountpoint loopback_dev
+```
+And you should have an image!
+
+(Remember, you should automate all of this in a makefile, create a rule to make your image, and add your kernel, etc)
 
 Then once you have the `qloader2.cfg` and have cleaned up the mountpoint and loopback-dev files, you can simply run the `qloader2-install` script, which should be simple enough to use.
 
