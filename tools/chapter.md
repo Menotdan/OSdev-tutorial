@@ -80,6 +80,18 @@ dd if=/dev/zero of=OS_Image.img bs=1M count=30
 Where count is the number of MiB you want the disk image to be.
 This simply reads 30 blocks of 1 MiB from `/dev/zero` (which is just a file that returns a bunch of null bytes when you read from it), and then writes them to the image file, which `dd` will create if it needs to.
 
+Then you should create a filesystem, and mount it to a loopback device.
+To make a ext2 filesystem on partition 1 (where the kernel and `qloader2.cfg` will live) you can do this:
+```
+mkdir mountpoint
+sudo losetup -Pf --show OS_Image.img > loopback_dev
+sudo partprobe `cat loopback_dev`
+sudo mkfs.ext2 `cat loopback_dev`p1
+sudo mount `cat loopback_dev`p1 mountpoint
+```
+This just sets up a loopback device and stores its name in the `loopback_dev` file, then sets up an ext2 filesystem, then mounts partition 1 to the `mountpoint` folder.
+
+
 Then you just need to move the OS elf file to the filesystem. And create a `qloader2.cfg` which will tell qloader2 how to load your kernel.
 
 An example `qloader2.cfg` could look like this:
@@ -106,10 +118,11 @@ KERNEL_CMDLINE=
 
 You can learn more about these options [here](https://github.com/qloader2/qloader2/blob/master/CONFIG.md), and [here](https://github.com/qloader2/qloader2/blob/master/README.md).
 
-Then once you have the `qloader2.cfg` on the disk, you can simply run the `qloader2-install` script, which should be simple enough to use.
+Then once you have the `qloader2.cfg` and have cleaned up the mountpoint and loopback-dev files, you can simply run the `qloader2-install` script, which should be simple enough to use.
 
 `./qloader2-install <qloader2 binary path> <device / image to install to>`
 
+So just install the `qloader2.bin` to the `OS_Image.img` and you should be ready to boot, though there isn't a kernel yet, so we will have to make oen.
 
 Now to run the kernel with QEMU and KVM you can do something like this:
 ```

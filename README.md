@@ -20,3 +20,5 @@ This tutorial will not cover how to make your own bootloader, as there are alrea
 [Chapter 1: Loading the kernel and getting code execution](1/chapter.md)
 
 [Chapter 2: Loading the GDT](2/chapter.md)
+
+[Chapter 3: Getting debugging output](3/chapter.md)
