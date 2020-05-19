@@ -53,3 +53,58 @@ void port_outw(uint16_t port, uint16_t data) {
 }
 ```
 Now, if you notice the differences, you should be able to change the registers and data types to match what was said above with `eax` for the register and `uint32_t` for the data type.
+
+Now that we have port io, we should set up the serial controller. (This should probably go in a new file if you want clean structure) The COM port we want is COM1 and its base io address is `0x3f8`. You can define a macro for COM1's base if you want.
+
+This is the code to setup the port with a 38400 baud rate (you should put this in a function):
+```c
+port_outb(com_port + 1, 0); // Disable interrupts
+port_outb(com_port + 3, 1<<7); // Set the DLAB bit so offsets 0 and 1 are for baud rate
+
+/* The magic values for 38400 baud rate */
+port_outb(COM1 + 0, 3);
+port_outb(COM1 + 1, 0);
+
+port_outb(COM1 + 3, 3); // 8 bits at a time, no parity, one stop bit
+port_outb(COM1 + 2, 0xC7); // No idea what this does :/
+port_outb(COM1 + 4, 0x0B); // No idea what this does either
+```
+You can read more about what this does [here](https://wiki.osdev.org/Serial_Ports).
+
+
+To transmit data, all you have to do is wait until you can (repeatedly check if the transmission buffer is empty), and then send the data to the right port.
+
+To wait for the data to be ready you can do something like this:
+```c
+while (!(port_inb(COM1 + 5) & 0x20)) { asm("pause"); }
+```
+This will create a pause loop until the port is ready to send data.
+
+Then, to send a byte, you can do this:
+```c
+port_outb(COM1, data);
+```
+
+Now, to send a string over the COM port, you can do something like this:
+```c
+void wait_serial_ready() {
+    while (!(port_inb(COM1 + 5) & 0x20)) { asm("pause"); }
+}
+
+void serial_print(char *string) {
+    while (*string != '\0') { // Strings are null terminated
+        wait_serial_ready();
+        port_outb(COM1, data);
+        string++;
+    }
+}
+```
+
+Now, remember to call your serial setup function in kmain, then you can test the print function with something like this:
+```c
+serial_print("Hi!\n");
+```
+
+If you passed `-serial stdio` to QEMU, it should now print Hi! :D
+
+This can be used later for debugging your code and it is very useful to be able to print things.
