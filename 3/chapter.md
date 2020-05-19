@@ -5,7 +5,7 @@ So we have a QEMU window, and we can halt the CPU, but what if we want to talk t
 
 We can use a COM port that you can control with QEMU's `-serial` option to print things from the kernel. You just have to send a few values to a few ports to do setup of the serial communication, and then you can just write data to the port and it will be redirected to where you specified with `-serial`.
 
-What are ports? They are another kind of address space like memory, that are accessed using the `in` and `out` instructions (similar to how memory is accessed with `mov`). They are used to control hardware like the serial controller that QEMU emulates, or the programable interrupt timer (we will do that later).
+What are ports? They are another kind of address space like memory, that are accessed using the `in` and `out` instructions (similar to how memory is accessed with `mov`). They are used to control hardware like the serial controller that QEMU emulates, or the programmable interrupt timer (we will add support for that later).
 
 We should write some functions to do port io, remember the naming and directory structure is up to you, but I would at least put this in another file, having all of your code in one file would be really hard to read through. 
 
