@@ -34,7 +34,7 @@ The `out` instruction takes two register parameters as well, `al` is 1 byte, so 
 
 Also you might notice the `%%` before the register names in the assembly, this is because GCC inline assembly is based on AT&T syntax (commonly used in GNU AS) which uses `%` as a prefix; however `%` is used for something else in GCC inline asm ([ASM Wildcards](https://wiki.osdev.org/Inline_Assembly#Wildcards:_How_you_can_let_the_compiler_choose)) so they changed it to `%%`.
 
-Knowing that the register size of the first parameter of `out` and the second parameter of `in` controls how much data is read from the port, you can change the sizes of the register and the size of `data` and `ret` to make `port_outw`, `port_inw`, `port_outd`, and `port_ind`.
+Knowing that the register size of the first parameter of `out` and the second parameter of `in` controls how much data is read from the port, you can change the sizes of the register and the size of `data` and `ret` to make `port_outw`, `port_inw`, `port_outd`, and `port_ind`. 
 
 You can change register name used to `ax` (it is 16 bits, or a word) for outw and inw, and the `data` and `ret` should be `uint16_t`. For outd and ind, use `eax` (it is 32 bits, or a double word), and `data` and `ret` should be `uint32_t`.
 
@@ -58,8 +58,8 @@ Now that we have port io, we should set up the serial controller. (This should p
 
 This is the code to setup the port with a 38400 baud rate (you should put this in a function):
 ```c
-port_outb(com_port + 1, 0); // Disable interrupts
-port_outb(com_port + 3, 1<<7); // Set the DLAB bit so offsets 0 and 1 are for baud rate
+port_outb(COM1 + 1, 0); // Disable interrupts
+port_outb(COM1 + 3, 1<<7); // Set the DLAB bit so offsets 0 and 1 are for baud rate
 
 /* The magic values for 38400 baud rate */
 port_outb(COM1 + 0, 3);
@@ -87,14 +87,14 @@ port_outb(COM1, data);
 
 Now, to send a string over the COM port, you can do something like this:
 ```c
-void wait_serial_ready() {
+void wait_for_transmit() {
     while (!(port_inb(COM1 + 5) & 0x20)) { asm("pause"); }
 }
 
 void serial_print(char *string) {
     while (*string != '\0') { // Strings are null terminated
-        wait_serial_ready();
-        port_outb(COM1, data);
+        wait_for_transmit();
+        port_outb(COM1, *string);
         string++;
     }
 }
