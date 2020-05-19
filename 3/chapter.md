@@ -43,13 +43,13 @@ If this confuses you, this is what the `outw` and `inw` should look like, observ
 ```c
 uint16_t port_inw(uint16_t port) {
     uint16_t ret;
-    asm("inw %%dx, %%ax" : "=a"(ret) : "d"(port));
+    asm("in %%dx, %%ax" : "=a"(ret) : "d"(port));
     return ret;
 }
 ```
 ```c
 void port_outw(uint16_t port, uint16_t data) {
-    asm("outw %%ax, %%dx" : : "a"(data), "d"(port));
+    asm("out %%ax, %%dx" : : "a"(data), "d"(port));
 }
 ```
 Now, if you notice the differences, you should be able to change the registers and data types to match what was said above with `eax` for the register and `uint32_t` for the data type.
