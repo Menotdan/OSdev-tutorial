@@ -32,7 +32,7 @@ void port_outb(uint16_t port, uint8_t data) {
 ```
 The `out` instruction takes two register parameters as well, `al` is 1 byte, so it outputs 1 byte to the port in `dx`, and the `"a"(data)` sets the `al` register to `data` and `"d"(port)` sets `dx` to the port number.
 
-Also, you may notice the `%%` before the registers, this is because gcc's inline assembly uses GAS syntax, which always has `%%` before register names.
+Also you might notice the `%%` before the register names in the assembly, this is because GCC inline assembly is based on AT&T syntax (commonly used in GNU AS) which uses `%` as a prefix; however `%` is used for something else in GCC inline asm ([ASM Wildcards](https://wiki.osdev.org/Inline_Assembly#Wildcards:_How_you_can_let_the_compiler_choose)) so they changed it to `%%`.
 
 Knowing that the register size of the first parameter of `out` and the second parameter of `in` controls how much data is read from the port, you can change the sizes of the register and the size of `data` and `ret` to make `port_outw`, `port_inw`, `port_outd`, and `port_ind`.
 
