@@ -133,7 +133,7 @@ Then once you have the `qloader2.cfg` and have cleaned up the mountpoint and loo
 
 `./qloader2-install <qloader2 binary path> <device / image to install to>`
 
-So just install the `qloader2.bin` to the `OS_Image.img` and you should be ready to boot, though there isn't a kernel yet, so we will have to make oen.
+So just install the `qloader2.bin` to the `OS_Image.img` and you should be ready to boot, though there isn't a kernel yet, so we will have to make one.
 
 Now to run the kernel with QEMU and KVM you can do something like this:
 ```
