@@ -5,7 +5,7 @@ You are expected to know how to implement the things that are explained, but sim
 
 If you have trouble or any questions, you can join the [OSdev discord](https://discord.gg/RnCtsqD) and we will do our best to help you and provide answers to your questions.
 
-The [tools section](tools/chapter.md) of this tutorial assumes you are on some linux distro, and that you want to target the x86_64 architecture. If you want to use some other OS to develop, you may need some extra steps that we will not include here. If you want to target a different architecture with your OS there are many, many things that will be different that will not be included.
+The [tools section](chapters/tools/chapter.md) of this tutorial assumes you are on some linux distro, and that you want to target the x86_64 architecture. If you want to use some other OS to develop, you may need some extra steps that we will not include here. If you want to target a different architecture with your OS there are many, many things that will be different that will not be included.
 
 There also may be language specific setup that will need to be done at runtime or for compile time if you don't use C.
 
@@ -14,11 +14,13 @@ This tutorial will not cover how to make your own bootloader, as there are alrea
 ## Table of conents
 
 ### Tools setup
-[Setting up your tools](tools/chapter.md)
+[Setting up your tools](chapters/tools/chapter.md)
 
 ### Kernel
-[Chapter 1: Loading the kernel and getting code execution](1/chapter.md)
+[Chapter 1: Loading the kernel and getting code execution](chapters/1/chapter.md)
 
-[Chapter 2: Loading the GDT](2/chapter.md)
+[Chapter 2: Loading the GDT](chapters/2/chapter.md)
 
-[Chapter 3: Getting debugging output](3/chapter.md)
+[Chapter 3: Getting debugging output](chapters/3/chapter.md)
+
+[Chapter 4: Getting Stivale info and making a PMM](chapters/4/chapter.md)
