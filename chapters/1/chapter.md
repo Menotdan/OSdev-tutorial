@@ -17,6 +17,7 @@ stivale_header:
     dw 0            ; fb_width
     dw 0            ; fb_height
     dw 0            ; bpp
+    dq              ; overwrite the kernel entry point (we dont want this, so set it to null)
 ```
 All of these parameters are documented [here](https://github.com/qloader2/qloader2/blob/master/STIVALE.md).
 
