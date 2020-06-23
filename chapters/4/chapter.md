@@ -54,13 +54,13 @@ We should also implement a function to set a bit representing a page x to 1 and 
 void pmm_set_page_used(uint64_t page) {
     uint64_t byte = page / 8;
     uint64_t bit = page % 8;
-    bitmap[byte] |= (1>>bit);
+    bitmap[byte] |= (1<<bit);
 }
 
 void pmm_set_page_free(uint64_t page) {
     uint64_t byte = page / 8;
     uint64_t bit = page % 8;
-    bitmap[byte] &= ~(1>>bit);
+    bitmap[byte] &= ~(1<<bit);
 }
 ```
 
@@ -96,7 +96,7 @@ We should write a function to check if a page is used or not, then we can write 
 uint8_t is_page_used(uint64_t page) {
     uint64_t byte = page / 8;
     uint64_t bit = page % 8;
-    return (bitmap[byte] & (1>>bit)) << bit;
+    return (bitmap[byte] & (1<<bit)) >> bit;
 }
 ```
 
